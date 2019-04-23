@@ -25,3 +25,5 @@ hs_err_pid*
 # Other
 IO.html
 !kalah.jar
+.idea/
+*.iml
