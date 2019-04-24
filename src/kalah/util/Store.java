@@ -16,4 +16,8 @@ public class Store implements Pit {
     public void addSeed() {
         seeds++;
     }
+
+    public void addSeeds(int numSeeds) {
+        seeds += numSeeds;
+    }
 }

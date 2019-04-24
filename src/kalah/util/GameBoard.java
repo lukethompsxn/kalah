@@ -29,6 +29,14 @@ public class GameBoard {
         return currentPlayer;
     }
 
+    public Player getOpponentPlayer() {
+        if (currentPlayer.equals(p1)) {
+            return p2;
+        } else {
+            return p1;
+        }
+    }
+
     public boolean isActive() {
         return isActive;
     }
@@ -39,5 +47,13 @@ public class GameBoard {
 
     public List<Pit> getBoardPits() {
         return boardPits;
+    }
+
+    public void switchPlayer() {
+        if (currentPlayer.equals(p1)) {
+            currentPlayer = p2;
+        } else {
+            currentPlayer = p1;
+        }
     }
 }

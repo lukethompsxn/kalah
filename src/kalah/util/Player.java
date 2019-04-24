@@ -4,12 +4,12 @@ import java.util.Map;
 
 public class Player {
     private int id;
-    private Pit store;
+    private Store store;
     private Map<Integer, House> houses;
     private RenderDirection renderDirection;
     private int offset;
 
-    public Player(int id, Pit store, Map<Integer, House> houses, RenderDirection renderDirection, int offset) {
+    public Player(int id, Store store, Map<Integer, House> houses, RenderDirection renderDirection, int offset) {
         this.id = id;
         this.store = store;
         this.houses = houses;
@@ -21,7 +21,7 @@ public class Player {
         return id;
     }
 
-    public Pit getStore() {
+    public Store getStore() {
         return store;
     }
 
