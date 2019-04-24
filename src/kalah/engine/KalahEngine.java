@@ -14,13 +14,13 @@ public class KalahEngine implements GameEngine{
     private static final int INITIAL_STORE_SEEDS = 0;
 
     private GameBoard gameBoard;
-    private IOManger ioMananger;
+    private IOManger ioManager;
 
     private int numPits;
     private int numSeeds;
 
-    public KalahEngine(IOManger ioMananger, int numPits, int numSeeds) {
-        this.ioMananger = ioMananger;
+    public KalahEngine(IOManger ioManager, int numPits, int numSeeds) {
+        this.ioManager = ioManager;
         this.numPits = numPits;
         this.numSeeds = numSeeds;
     }
@@ -54,8 +54,9 @@ public class KalahEngine implements GameEngine{
     @Override
     public void play() {
         while (gameBoard.isActive()) {
-            ioMananger.render(gameBoard);
-            ioMananger.requestPlayerAction(gameBoard).execute();
+            ioManager.render(gameBoard);
+            ioManager.requestPlayerAction(gameBoard).execute();
         }
+        ioManager.renderTermination();
     }
 }

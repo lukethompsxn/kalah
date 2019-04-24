@@ -17,6 +17,12 @@ public class GameAction implements Action {
 
     @Override
     public void execute() {
+
+        if (!playerHasMoves()) {
+            gameBoard.terminate();
+            return;
+        }
+
         int seedCount = house.getSeeds();
         house.clearSeeds();
 
@@ -59,7 +65,6 @@ public class GameAction implements Action {
         }
 
         index++;
-
         return boardPits.get(index - 1);
     }
 
@@ -73,5 +78,14 @@ public class GameAction implements Action {
     private House getOppositePit(House currentPit) {
         int numPits = gameBoard.getP1().getHouses().size();
         return gameBoard.getOpponentPlayer().getHouses().get(numPits + 1 - currentPit.getId());
+    }
+
+    private boolean playerHasMoves() {
+        for (House house : gameBoard.getCurrentPlayer().getHouses().values()) {
+            if (house.getSeeds() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

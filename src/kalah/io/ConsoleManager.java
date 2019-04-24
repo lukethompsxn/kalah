@@ -60,6 +60,11 @@ public class ConsoleManager implements IOManger {
         return requestPlayerAction(gameBoard);
     }
 
+    @Override
+    public void renderTermination() {
+        io.println("Game over");
+    }
+
     private String renderPlayerHouses(Player player) {
         StringBuilder output = new StringBuilder();
         Map<Integer, House> houses = player.getHouses();
@@ -105,4 +110,3 @@ public class ConsoleManager implements IOManger {
         return true;
     }
 }
-
