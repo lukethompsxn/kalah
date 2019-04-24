@@ -50,7 +50,7 @@ public class ConsoleManager implements IOManger {
             } else {
                 try {
                     Player player = gameBoard.getCurrentPlayer();
-                    Pit house = player.getHouses().get(Integer.parseInt(response));
+                    House house = player.getHouses().get(Integer.parseInt(response));
                     return new GameAction(gameBoard, player, house);
                 } catch (NumberFormatException e) {
                     // do nothing as falls through to return
@@ -62,7 +62,7 @@ public class ConsoleManager implements IOManger {
 
     private String renderPlayerHouses(Player player) {
         StringBuilder output = new StringBuilder();
-        Map<Integer, Pit> houses = player.getHouses();
+        Map<Integer, House> houses = player.getHouses();
 
         if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
             for (Integer index : houses.keySet()) {

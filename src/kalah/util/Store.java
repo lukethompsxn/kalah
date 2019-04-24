@@ -1,8 +1,19 @@
 package kalah.util;
 
-public class Store extends Pit {
+public class Store implements Pit {
+    private int seeds;
 
     public Store(int seeds) {
-        super(seeds);
+        this.seeds = seeds;
+    }
+
+    @Override
+    public int getSeeds() {
+        return seeds;
+    }
+
+    @Override
+    public void addSeed() {
+        seeds++;
     }
 }

@@ -3,7 +3,9 @@ package kalah.engine;
 import kalah.io.IOManger;
 import kalah.util.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KalahEngine implements GameEngine{
@@ -27,20 +29,26 @@ public class KalahEngine implements GameEngine{
     public void initialise() {
 
         // Initialise Houses
-        Map<Integer, Pit> p1Houses = new HashMap<>();
-        Map<Integer, Pit> p2Houses = new HashMap<>();
+        Map<Integer, House> p1Houses = new HashMap<>();
+        Map<Integer, House> p2Houses = new HashMap<>();
 
         for (int index = 1; index <= numPits; index++) {
-            p1Houses.put(index, new House(numSeeds));
-            p2Houses.put(index, new House(numSeeds));
+            p1Houses.put(index, new House(index, numSeeds));
+            p2Houses.put(index, new House(index, numSeeds));
         }
 
         // Initialise Players
-        Player p1 = new Player(PLAYER1, new Store(INITIAL_STORE_SEEDS), p1Houses, RenderDirection.FORWARDS);
-        Player p2 = new Player(PLAYER2, new Store(INITIAL_STORE_SEEDS), p2Houses, RenderDirection.BACKWARDS);
+        Player p1 = new Player(PLAYER1, new Store(INITIAL_STORE_SEEDS), p1Houses, RenderDirection.FORWARDS, 0);
+        Player p2 = new Player(PLAYER2, new Store(INITIAL_STORE_SEEDS), p2Houses, RenderDirection.BACKWARDS, numPits + 1);
 
         // Initialise Board
-        gameBoard = new GameBoard(p1, p2);
+        List<Pit> boardPits = new ArrayList<>();
+        boardPits.addAll(p1Houses.values());
+        boardPits.add(p1.getStore());
+        boardPits.addAll(p2Houses.values());
+        boardPits.add(p2.getStore());
+
+        gameBoard = new GameBoard(p1, p2, boardPits);
     }
 
     @Override

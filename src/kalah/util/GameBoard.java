@@ -1,14 +1,20 @@
 package kalah.util;
 
+import java.util.List;
+
 public class GameBoard {
     private Player p1;
     private Player p2;
+    private Player currentPlayer;
     private boolean isActive;
+    private List<Pit> boardPits;
 
-    public GameBoard(Player p1, Player p2) {
+    public GameBoard(Player p1, Player p2, List<Pit> boardPits) {
         this.p1 = p1;
         this.p2 = p2;
+        this.currentPlayer = p1;
         this.isActive = true;
+        this.boardPits = boardPits;
     }
 
     public Player getP1() {
@@ -20,7 +26,7 @@ public class GameBoard {
     }
 
     public Player getCurrentPlayer() {
-        return p1; //todo implement this
+        return currentPlayer;
     }
 
     public boolean isActive() {
@@ -29,5 +35,9 @@ public class GameBoard {
 
     public void terminate() {
         isActive = false;
+    }
+
+    public List<Pit> getBoardPits() {
+        return boardPits;
     }
 }
