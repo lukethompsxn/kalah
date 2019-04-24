@@ -4,11 +4,13 @@ import com.qualitascorpus.testsupport.IO;
 import kalah.util.GameBoard;
 import kalah.util.Pit;
 import kalah.util.Player;
+import kalah.util.RenderDirection;
 
 import java.util.Map;
 
 public class ConsoleVisualiser implements GameVisualiser {
-    private static final String NEW_LINE = "\n";
+    private static final int MINIMUM_DOUBLE_DIGITS = 10;
+    private static final int BASE = 0;
 
     private IO io;
 
@@ -18,35 +20,47 @@ public class ConsoleVisualiser implements GameVisualiser {
 
     @Override
     public void render(GameBoard gameBoard) {
-        StringBuilder output = new StringBuilder();
-        output.append("+----+-------+-------+-------+-------+-------+-------+----+");
-        output.append(NEW_LINE);
+        Player p1 = gameBoard.getP1();
+        Player p2 = gameBoard.getP2();
 
-        renderPlayer(output, gameBoard.getP2());
-        output.append(NEW_LINE);
-
-        output.append("|    |-------+-------+-------+-------+-------+-------|    |");
-        output.append(NEW_LINE);
-
-        renderPlayer(output, gameBoard.getP1());
-        output.append(NEW_LINE);
-
-        output.append("+----+-------+-------+-------+-------+-------+-------+----+");
-        output.append(NEW_LINE);
-
-        output.append(String.format("Player %d's turn - Specify house number or 'q' to quit: ", gameBoard.getCurrentPlayer().getId()));
-
-        io.println(output.toString());
+        io.println("+----+-------+-------+-------+-------+-------+-------+----+");
+        io.println(String.format("|%s%s%s|", renderPlayerName(p2), renderPlayerHouses(p2), renderPlayerStore(p1)));
+        io.println("|    |-------+-------+-------+-------+-------+-------|    |");
+        io.println(String.format("|%s%s%s|", renderPlayerStore(p2), renderPlayerHouses(p1),  renderPlayerName(p1)));
+        io.println("+----+-------+-------+-------+-------+-------+-------+----+");
+        io.println(String.format("Player %d's turn - Specify house number or 'q' to quit: ", gameBoard.getCurrentPlayer().getId()));
     }
 
-    private void renderPlayer(StringBuilder output, Player player) {
-        Pit store = player.getStore();
+    private String renderPlayerHouses(Player player) {
+        StringBuilder output = new StringBuilder();
         Map<Integer, Pit> houses = player.getHouses();
 
-        output.append(String.format("| P%s ", player.getId()));
-        for (Integer index : houses.keySet()) {
-            output.append(String.format("| %d[ %d] ", index, houses.get(index).getSeeds()));
+        if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
+            for (Integer index : houses.keySet()) {
+                output.append(String.format("| %d[ %d] ", index, houses.get(index).getSeeds()));
+            }
+        } else {
+            for (Integer index : houses.keySet()) {
+                output.insert(BASE, String.format("| %d[ %d] ", index, houses.get(index).getSeeds()));
+            }
         }
-        output.append(String.format("| %d |", store.getSeeds()));
+
+        output.append("|");
+        return output.toString();
+    }
+
+    private String renderPlayerName(Player player) {
+        return String.format(" P%s ", player.getId());
+    }
+
+    private String renderPlayerStore(Player player) {
+        int seeds = player.getStore().getSeeds();
+
+        if (seeds < MINIMUM_DOUBLE_DIGITS) {
+            return String.format("  %d ", seeds);
+        } else {
+            return String.format(" %d ", seeds);
+        }
     }
 }
+

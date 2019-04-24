@@ -9,6 +9,7 @@ import java.util.Map;
 public class GameEngine {
     private static final int PLAYER1 = 1;
     private static final int PLAYER2 = 2;
+    private static final int INITIAL_STORE_SEEDS = 0;
 
     private GameBoard gameBoard;
     private GameVisualiser visualiser;
@@ -29,13 +30,13 @@ public class GameEngine {
         Map<Integer, Pit> p2Houses = new HashMap<>();
 
         for (int index = 1; index <= numPits; index++) {
-            p1Houses.put(index, new House(numPits));
-            p2Houses.put(index, new House(numPits));
+            p1Houses.put(index, new House(numSeeds));
+            p2Houses.put(index, new House(numSeeds));
         }
 
         // Initialise Players
-        Player p1 = new Player(PLAYER1, new Store(numSeeds), p1Houses);
-        Player p2 = new Player(PLAYER2, new Store(numSeeds), p2Houses);
+        Player p1 = new Player(PLAYER1, new Store(INITIAL_STORE_SEEDS), p1Houses, RenderDirection.FORWARDS);
+        Player p2 = new Player(PLAYER2, new Store(INITIAL_STORE_SEEDS), p2Houses, RenderDirection.BACKWARDS);
 
         // Initialise Board
         gameBoard = new GameBoard(p1, p2);
