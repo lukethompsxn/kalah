@@ -1,5 +1,6 @@
 package kalah.action;
 
+import kalah.exception.InvalidMoveException;
 import kalah.util.*;
 
 import java.util.List;
@@ -16,11 +17,9 @@ public class GameAction implements Action {
     }
 
     @Override
-    public void execute() {
-
-        if (!playerHasMoves()) {
-            gameBoard.terminate();
-            return;
+    public void execute() throws InvalidMoveException {
+        if (house.getSeeds() == 0) {
+            throw new InvalidMoveException("House is empty. Move again.");
         }
 
         int seedCount = house.getSeeds();
@@ -34,22 +33,30 @@ public class GameAction implements Action {
 
         if (pit == null) {
             return;
+
+        } else if (pit.equals(gameBoard.getCurrentPlayer().getStore())) { // Case 2 //todo verifying ordering of this logic, definitely dodgy on the order they occur in
+            // do nothing
+            System.out.println("case 2");
+
         } else if (!gameBoard.getCurrentPlayer().getHouses().containsValue(pit) // Case 1
                 || pit.getSeeds() > 1) {
             gameBoard.switchPlayer();
-
-        } else if (pit.equals(gameBoard.getCurrentPlayer().getStore())) { // Case 2
-            // do nothing
+            System.out.println("case 1");
 
         } else if (gameBoard.getCurrentPlayer().getHouses().containsValue(pit) // Case 3
-                && pit.getSeeds() == 0
-                && pit instanceof House){
+                && pit.getSeeds() == 1
+                && pit instanceof House
+                && getOppositePit((House)pit).getSeeds() > 0){
             House oppositePit = getOppositePit((House)pit); //todo fix casting
             gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds());
             oppositePit.clearSeeds();
-
+            ((House) pit).clearSeeds();
+            gameBoard.getCurrentPlayer().getStore().addSeed();
+            gameBoard.switchPlayer();
+            System.out.println("case 3");
         } else {
             gameBoard.switchPlayer();
+            System.out.println("case 4");
         }
     }
 

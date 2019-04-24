@@ -56,4 +56,13 @@ public class GameBoard {
             currentPlayer = p1;
         }
     }
+
+    public boolean canContinue() {
+        for (House house : currentPlayer.getHouses().values()) {
+            if (house.getSeeds() > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

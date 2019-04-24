@@ -15,12 +15,13 @@ public class ConsoleManager implements IOManger {
     private static final String BOARD_BORDER = "+----+-------+-------+-------+-------+-------+-------+----+";
     private static final String BOARD_DIVIDER = "|    |-------+-------+-------+-------+-------+-------|    |";
     private static final String BOARD_PLAYER = "|%s%s%s|";
-    private static final String BOARD_PIT = "| %d[ %d] ";
+    private static final String BOARD_PIT_SINGLE = "| %d[ %d] ";
+    private static final String BOARD_PIT_DOUBLE = "| %d[%d] ";
     private static final String BOARD_NAME = " P%s ";
     private static final String BOARD_STORE_SINGLE = "  %d ";
     private static final String BOARD_STORE_DOUBLE = " %d ";
     private static final String BOARD_VERTICAL_DIVIDER = "|";
-    private static final String BOARD_INPUT = "Player %d's turn - Specify house number or 'q' to quit: ";
+    private static final String BOARD_INPUT = "Player P%d's turn - Specify house number or 'q' to quit: ";
 
     private IO io;
 
@@ -42,6 +43,10 @@ public class ConsoleManager implements IOManger {
 
     @Override
     public Action requestPlayerAction(GameBoard gameBoard) {
+        if (!gameBoard.canContinue()) {
+            return new QuitAction(gameBoard);
+        }
+
         String response = io.readFromKeyboard(String.format(BOARD_INPUT, gameBoard.getCurrentPlayer().getId()));
 
         if (isValid(response)) {
@@ -65,17 +70,26 @@ public class ConsoleManager implements IOManger {
         io.println("Game over");
     }
 
+    @Override
+    public void renderError(String errorMessage) {
+        io.println(errorMessage);
+    }
+
     private String renderPlayerHouses(Player player) {
         StringBuilder output = new StringBuilder();
         Map<Integer, House> houses = player.getHouses();
 
         if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
             for (Integer index : houses.keySet()) {
-                output.append(String.format(BOARD_PIT, index, houses.get(index).getSeeds()));
+                int seeds = houses.get(index).getSeeds();
+                String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
+                output.append(String.format(fmt, index, seeds));
             }
         } else {
             for (Integer index : houses.keySet()) {
-                output.insert(BASE, String.format(BOARD_PIT, index, houses.get(index).getSeeds()));
+                int seeds = houses.get(index).getSeeds();
+                String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
+                output.insert(BASE, String.format(fmt, index, seeds));
             }
         }
 

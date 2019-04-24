@@ -1,5 +1,7 @@
 package kalah.engine;
 
+import kalah.action.Action;
+import kalah.exception.InvalidMoveException;
 import kalah.io.IOManger;
 import kalah.util.*;
 
@@ -55,8 +57,13 @@ public class KalahEngine implements GameEngine{
     public void play() {
         while (gameBoard.isActive()) {
             ioManager.render(gameBoard);
-            ioManager.requestPlayerAction(gameBoard).execute();
+            try {
+                ioManager.requestPlayerAction(gameBoard).execute();
+            } catch (InvalidMoveException e) {
+                ioManager.renderError(e.getMessage());
+            }
         }
         ioManager.renderTermination();
+        ioManager.render(gameBoard);
     }
 }
