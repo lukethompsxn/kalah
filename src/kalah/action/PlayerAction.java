@@ -57,12 +57,10 @@ public class PlayerAction implements Action {
         return boardPits.get(index - 1);
     }
 
-    //todo refactor to just use getOpponent().getStore()
     private boolean isOpponentsStore(int index, List<Pit> boardPits) {
         return index < boardPits.size()
                 && boardPits.get(index) != null
-                && boardPits.get(index).getPitType().equals(Pit.PitType.STORE)
-                && !boardPits.get(index).equals(gameBoard.getCurrentPlayer().getStore());
+                && boardPits.get(index).equals(gameBoard.getOpponentPlayer().getStore());
     }
 
     private Pit getOppositePit(Pit currentPit) {
@@ -91,10 +89,12 @@ public class PlayerAction implements Action {
 
     private void doCapture(Pit pit) {
         Pit oppositePit = getOppositePit(pit);
-        gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds());
-        oppositePit.clearSeeds();
         pit.clearSeeds();
-        gameBoard.getCurrentPlayer().getStore().addSeed();
+
+        // + 1 to account for the seed which caused the capture
+        gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds() + 1);
+        oppositePit.clearSeeds();
+
         gameBoard.switchPlayer();
     }
 }
