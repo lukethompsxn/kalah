@@ -17,6 +17,11 @@ public class Store implements Pit {
         seeds++;
     }
 
+    @Override
+    public int getId() {
+        return 0;
+    }
+
     public void addSeeds(int numSeeds) {
         seeds += numSeeds;
     }

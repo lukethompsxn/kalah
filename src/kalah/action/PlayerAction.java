@@ -31,31 +31,14 @@ public class PlayerAction implements Action {
             pit.addSeed();
         }
 
-        if (pit == null) {
-            //do nothing
-        } else if (pit.equals(gameBoard.getCurrentPlayer().getStore())) { // Case 2 //todo verifying ordering of this logic, definitely dodgy on the order they occur in
+        if (pit == null || isPlayersOwnStore(pit)) {
             // do nothing
-            System.out.println("case 2");
-
-        } else if (!gameBoard.getCurrentPlayer().getHouses().containsValue(pit) // Case 1
-                || pit.getSeeds() > 1) {
+        } else if (isOpponentsTurn(pit)) {
             gameBoard.switchPlayer();
-            System.out.println("case 1");
-
-        } else if (gameBoard.getCurrentPlayer().getHouses().containsValue(pit) // Case 3
-                && pit.getSeeds() == 1
-                && pit instanceof House
-                && getOppositePit((House)pit).getSeeds() > 0){
-            House oppositePit = getOppositePit((House)pit); //todo fix casting
-            gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds());
-            oppositePit.clearSeeds();
-            ((House) pit).clearSeeds();
-            gameBoard.getCurrentPlayer().getStore().addSeed();
-            gameBoard.switchPlayer();
-            System.out.println("case 3");
+        } else if (isCapture(pit)) {
+            doCapture(pit);
         } else {
             gameBoard.switchPlayer();
-            System.out.println("case 4");
         }
     }
 
@@ -87,4 +70,31 @@ public class PlayerAction implements Action {
         return gameBoard.getOpponentPlayer().getHouses().get(numPits + 1 - currentPit.getId());
     }
 
+    // Case 1
+    private boolean isOpponentsTurn(Pit pit) {
+        return !gameBoard.getCurrentPlayer().getHouses().containsValue(pit)
+                || pit.getSeeds() > 1;
+    }
+
+    // Case 2
+    private boolean isPlayersOwnStore(Pit pit) {
+        return pit.equals(gameBoard.getCurrentPlayer().getStore());
+    }
+
+    // Case 3
+    private boolean isCapture(Pit pit) {
+        return gameBoard.getCurrentPlayer().getHouses().containsValue(pit)
+                && pit.getSeeds() == 1
+                && pit instanceof House
+                && getOppositePit((House)pit).getSeeds() > 0;
+    }
+
+    private void doCapture(Pit pit) {
+        House oppositePit = getOppositePit((House)pit); //todo fix casting
+        gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds());
+        oppositePit.clearSeeds();
+        ((House) pit).clearSeeds();
+        gameBoard.getCurrentPlayer().getStore().addSeed();
+        gameBoard.switchPlayer();
+    }
 }
