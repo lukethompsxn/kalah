@@ -1,25 +1,25 @@
 package kalah.action;
 
-import kalah.exception.InvalidMoveException;
+import kalah.exception.InvalidActionException;
 import kalah.util.*;
 
 import java.util.List;
 
-public class GameAction implements Action {
+public class PlayerAction implements Action {
     private GameBoard gameBoard;
     private House house;
     private int index;
 
-    public GameAction(GameBoard gameBoard, Player player, House house) {
+    public PlayerAction(GameBoard gameBoard, Player player, House house) {
         this.gameBoard = gameBoard;
         this.house = house;
         this.index = player.getOffset() + house.getId();
     }
 
     @Override
-    public void execute() throws InvalidMoveException {
+    public void execute() throws InvalidActionException {
         if (house.getSeeds() == 0) {
-            throw new InvalidMoveException("House is empty. Move again.");
+            throw new InvalidActionException("House is empty. Move again.");
         }
 
         int seedCount = house.getSeeds();
@@ -32,8 +32,7 @@ public class GameAction implements Action {
         }
 
         if (pit == null) {
-            return;
-
+            //do nothing
         } else if (pit.equals(gameBoard.getCurrentPlayer().getStore())) { // Case 2 //todo verifying ordering of this logic, definitely dodgy on the order they occur in
             // do nothing
             System.out.println("case 2");
@@ -75,6 +74,7 @@ public class GameAction implements Action {
         return boardPits.get(index - 1);
     }
 
+    //todo refactor to just use getOpponent().getStore()
     private boolean isOpponentsStore(int index, List<Pit> boardPits) {
         return index < boardPits.size()
                 && boardPits.get(index) != null

@@ -2,9 +2,12 @@ package kalah.io;
 
 import com.qualitascorpus.testsupport.IO;
 import kalah.action.Action;
-import kalah.action.GameAction;
-import kalah.action.QuitAction;
-import kalah.util.*;
+import kalah.action.GameOverAction;
+import kalah.action.PlayerAction;
+import kalah.util.GameBoard;
+import kalah.util.House;
+import kalah.util.Player;
+import kalah.util.RenderDirection;
 
 import java.util.Map;
 
@@ -44,19 +47,19 @@ public class ConsoleManager implements IOManger {
     @Override
     public Action requestPlayerAction(GameBoard gameBoard) {
         if (!gameBoard.canContinue()) {
-            return new QuitAction(gameBoard);
+            return new GameOverAction(gameBoard);
         }
 
         String response = io.readFromKeyboard(String.format(BOARD_INPUT, gameBoard.getCurrentPlayer().getId()));
 
         if (isValid(response)) {
             if (response.equals("q") || response.equals("Q")) {
-                return new QuitAction(gameBoard);
+                return new GameOverAction(gameBoard);
             } else {
                 try {
                     Player player = gameBoard.getCurrentPlayer();
                     House house = player.getHouses().get(Integer.parseInt(response));
-                    return new GameAction(gameBoard, player, house);
+                    return new PlayerAction(gameBoard, player, house);
                 } catch (NumberFormatException e) {
                     // do nothing as falls through to return
                 }
@@ -74,6 +77,21 @@ public class ConsoleManager implements IOManger {
     public void renderError(String errorMessage) {
         io.println(errorMessage);
     }
+
+    @Override
+    public void renderScores(GameBoard gameBoard) {
+        Map<Player, Integer> scores = gameBoard.getFinalScores();
+        io.println(String.format("\tplayer 1:%d", scores.get(gameBoard.getP1())));
+        io.println(String.format("\tplayer 2:%d", scores.get(gameBoard.getP2())));
+
+        if (scores.get(gameBoard.getP1()) > scores.get(gameBoard.getP2())) {
+            io.println(String.format("Player %d wins!", gameBoard.getP1().getId()));
+        } else if (scores.get(gameBoard.getP1()) < scores.get(gameBoard.getP2())) {
+            io.println(String.format("Player %d wins!", gameBoard.getP2().getId()));
+        } else {
+            io.println("A tie!");
+        }
+     }
 
     private String renderPlayerHouses(Player player) {
         StringBuilder output = new StringBuilder();

@@ -2,10 +2,10 @@ package kalah.action;
 
 import kalah.util.GameBoard;
 
-public class QuitAction implements Action {
+public class GameOverAction implements Action {
     private GameBoard gameBoard;
 
-    public QuitAction(GameBoard gameBoard) {
+    public GameOverAction(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
 

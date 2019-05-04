@@ -1,6 +1,6 @@
 package kalah.engine;
 
-import kalah.exception.InvalidMoveException;
+import kalah.exception.InvalidActionException;
 import kalah.io.IOManger;
 import kalah.util.*;
 
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KalahEngine implements GameEngine{
+public class KalahEngine implements GameEngine {
     private static final int PLAYER1 = 1;
     private static final int PLAYER2 = 2;
     private static final int INITIAL_STORE_SEEDS = 0;
@@ -49,7 +49,7 @@ public class KalahEngine implements GameEngine{
         boardPits.addAll(p2Houses.values());
         boardPits.add(p2.getStore());
 
-        gameBoard = new GameBoard(p1, p2, boardPits);
+        gameBoard = new GameBoard(p1, p2, boardPits, 2 * numSeeds * numPits);
     }
 
     @Override
@@ -58,11 +58,15 @@ public class KalahEngine implements GameEngine{
             ioManager.render(gameBoard);
             try {
                 ioManager.requestPlayerAction(gameBoard).execute();
-            } catch (InvalidMoveException e) {
+            } catch (InvalidActionException e) {
                 ioManager.renderError(e.getMessage());
             }
         }
         ioManager.renderTermination();
         ioManager.render(gameBoard);
+
+        if (gameBoard.isGameCompleted()) {
+            ioManager.renderScores(gameBoard);
+        }
     }
 }

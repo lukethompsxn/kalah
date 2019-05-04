@@ -7,6 +7,6 @@ public interface IOManger {
     void render(GameBoard gameBoard);
     void renderTermination();
     void renderError(String errorMessage);
+    void renderScores(GameBoard gameBoard);
     Action requestPlayerAction(GameBoard gameBoard);
-
 }

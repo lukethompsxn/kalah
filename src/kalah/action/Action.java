@@ -1,7 +1,7 @@
 package kalah.action;
 
-import kalah.exception.InvalidMoveException;
+import kalah.exception.InvalidActionException;
 
 public interface Action {
-    void execute() throws InvalidMoveException;
+    void execute() throws InvalidActionException;
 }
