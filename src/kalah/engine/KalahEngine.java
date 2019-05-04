@@ -51,7 +51,7 @@ public class KalahEngine implements GameEngine {
         boardPits.addAll(p2Houses.values());
         boardPits.add(p2.getStore());
 
-        gameBoard = new GameBoard(p1, p2, boardPits, NUM_PLAYERS * numSeeds * numPits);
+        gameBoard = new KalahBoard(p1, p2, boardPits, NUM_PLAYERS * numSeeds * numPits);
     }
 
     @Override

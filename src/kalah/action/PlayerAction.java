@@ -1,100 +1,19 @@
 package kalah.action;
 
 import kalah.exception.InvalidActionException;
-import kalah.util.*;
-
-import java.util.List;
+import kalah.util.GameBoard;
 
 public class PlayerAction implements Action {
     private GameBoard gameBoard;
-    private Pit house;
-    private int index;
+    private int position;
 
-    public PlayerAction(GameBoard gameBoard, Player player, Pit house) {
+    public PlayerAction(GameBoard gameBoard, int position) {
         this.gameBoard = gameBoard;
-        this.house = house;
-        this.index = player.getOffset() + house.getId();
+        this.position = position;
     }
 
     @Override
     public void execute() throws InvalidActionException {
-        if (house.getSeeds() == 0) {
-            throw new InvalidActionException("House is empty. Move again.");
-        }
-
-        int seedCount = house.getSeeds();
-        house.clearSeeds();
-
-        Pit pit = null;
-        for (int i = 0; i < seedCount; i++) {
-            pit = getNextPit();
-            pit.addSeed();
-        }
-
-        if (pit == null || isPlayersOwnStore(pit)) {
-            // do nothing
-        } else if (isOpponentsTurn(pit)) {
-            gameBoard.switchPlayer();
-        } else if (isCapture(pit)) {
-            doCapture(pit);
-        } else {
-            gameBoard.switchPlayer();
-        }
-    }
-
-    private Pit getNextPit() {
-        List<Pit> boardPits = gameBoard.getBoardPits();
-
-        if (isOpponentsStore(index, boardPits)) {
-            index++;
-        }
-
-        if (index >= boardPits.size()) {
-            index = 0;
-        }
-
-        index++;
-        return boardPits.get(index - 1);
-    }
-
-    private boolean isOpponentsStore(int index, List<Pit> boardPits) {
-        return index < boardPits.size()
-                && boardPits.get(index) != null
-                && boardPits.get(index).equals(gameBoard.getOpponentPlayer().getStore());
-    }
-
-    private Pit getOppositePit(Pit currentPit) {
-        int numPits = gameBoard.getP1().getHouses().size();
-        return gameBoard.getOpponentPlayer().getHouses().get(numPits + 1 - currentPit.getId());
-    }
-
-    // Case 1
-    private boolean isOpponentsTurn(Pit pit) {
-        return !gameBoard.getCurrentPlayer().getHouses().containsValue(pit)
-                || pit.getSeeds() > 1;
-    }
-
-    // Case 2
-    private boolean isPlayersOwnStore(Pit pit) {
-        return pit.equals(gameBoard.getCurrentPlayer().getStore());
-    }
-
-    // Case 3
-    private boolean isCapture(Pit pit) {
-        return gameBoard.getCurrentPlayer().getHouses().containsValue(pit)
-                && pit.getSeeds() == 1
-                && pit.getPitType().equals(Pit.PitType.HOUSE)
-                && getOppositePit(pit).getSeeds() > 0;
-    }
-
-    private void doCapture(Pit pit) {
-        Pit oppositePit = getOppositePit(pit);
-        pit.clearSeeds();
-
-        // + 1 to account for the seed which caused the capture
-        gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds() + 1);
-        oppositePit.clearSeeds();
-
-        gameBoard.switchPlayer();
+        gameBoard.executeMove(position);
     }
 }

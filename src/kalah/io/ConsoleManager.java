@@ -54,9 +54,7 @@ public class ConsoleManager implements IOManger {
                 return new GameOverAction(gameBoard);
             } else {
                 try {
-                    Player player = gameBoard.getCurrentPlayer();
-                    Pit house = player.getHouses().get(Integer.parseInt(response));
-                    return new PlayerAction(gameBoard, player, house);
+                    return new PlayerAction(gameBoard, Integer.parseInt(response));
                 } catch (NumberFormatException e) {
                     // do nothing as it will fall through to return
                 }
