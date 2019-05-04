@@ -7,10 +7,10 @@ import java.util.List;
 
 public class PlayerAction implements Action {
     private GameBoard gameBoard;
-    private House house;
+    private Pit house;
     private int index;
 
-    public PlayerAction(GameBoard gameBoard, Player player, House house) {
+    public PlayerAction(GameBoard gameBoard, Player player, Pit house) {
         this.gameBoard = gameBoard;
         this.house = house;
         this.index = player.getOffset() + house.getId();
@@ -61,11 +61,11 @@ public class PlayerAction implements Action {
     private boolean isOpponentsStore(int index, List<Pit> boardPits) {
         return index < boardPits.size()
                 && boardPits.get(index) != null
-                && boardPits.get(index) instanceof Store
+                && boardPits.get(index).getPitType().equals(Pit.PitType.STORE)
                 && !boardPits.get(index).equals(gameBoard.getCurrentPlayer().getStore());
     }
 
-    private House getOppositePit(House currentPit) {
+    private Pit getOppositePit(Pit currentPit) {
         int numPits = gameBoard.getP1().getHouses().size();
         return gameBoard.getOpponentPlayer().getHouses().get(numPits + 1 - currentPit.getId());
     }
@@ -85,15 +85,15 @@ public class PlayerAction implements Action {
     private boolean isCapture(Pit pit) {
         return gameBoard.getCurrentPlayer().getHouses().containsValue(pit)
                 && pit.getSeeds() == 1
-                && pit instanceof House
-                && getOppositePit((House)pit).getSeeds() > 0;
+                && pit.getPitType().equals(Pit.PitType.HOUSE)
+                && getOppositePit(pit).getSeeds() > 0;
     }
 
     private void doCapture(Pit pit) {
-        House oppositePit = getOppositePit((House)pit); //todo fix casting
+        Pit oppositePit = getOppositePit(pit);
         gameBoard.getCurrentPlayer().getStore().addSeeds(oppositePit.getSeeds());
         oppositePit.clearSeeds();
-        ((House) pit).clearSeeds();
+        pit.clearSeeds();
         gameBoard.getCurrentPlayer().getStore().addSeed();
         gameBoard.switchPlayer();
     }

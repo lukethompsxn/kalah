@@ -13,6 +13,8 @@ public class KalahEngine implements GameEngine {
     private static final int PLAYER1 = 1;
     private static final int PLAYER2 = 2;
     private static final int INITIAL_STORE_SEEDS = 0;
+    private static final int STORE_ID = 0;
+    private static final int NUM_PLAYERS = 2;
 
     private GameBoard gameBoard;
     private IOManger ioManager;
@@ -30,17 +32,17 @@ public class KalahEngine implements GameEngine {
     public void initialise() {
 
         // Initialise Houses
-        Map<Integer, House> p1Houses = new HashMap<>();
-        Map<Integer, House> p2Houses = new HashMap<>();
+        Map<Integer, Pit> p1Houses = new HashMap<>();
+        Map<Integer, Pit> p2Houses = new HashMap<>();
 
         for (int index = 1; index <= numPits; index++) {
-            p1Houses.put(index, new House(index, numSeeds));
-            p2Houses.put(index, new House(index, numSeeds));
+            p1Houses.put(index, new Pit(index, numSeeds, Pit.PitType.HOUSE));
+            p2Houses.put(index, new Pit(index, numSeeds, Pit.PitType.HOUSE));
         }
 
         // Initialise Players
-        Player p1 = new Player(PLAYER1, new Store(INITIAL_STORE_SEEDS), p1Houses, RenderDirection.FORWARDS, 0);
-        Player p2 = new Player(PLAYER2, new Store(INITIAL_STORE_SEEDS), p2Houses, RenderDirection.BACKWARDS, numPits + 1);
+        Player p1 = new Player(PLAYER1, new Pit(STORE_ID, INITIAL_STORE_SEEDS, Pit.PitType.STORE), p1Houses, RenderDirection.FORWARDS, 0);
+        Player p2 = new Player(PLAYER2, new Pit(STORE_ID, INITIAL_STORE_SEEDS, Pit.PitType.STORE), p2Houses, RenderDirection.BACKWARDS, numPits + 1);
 
         // Initialise Board
         List<Pit> boardPits = new ArrayList<>();
@@ -49,7 +51,7 @@ public class KalahEngine implements GameEngine {
         boardPits.addAll(p2Houses.values());
         boardPits.add(p2.getStore());
 
-        gameBoard = new GameBoard(p1, p2, boardPits, 2 * numSeeds * numPits);
+        gameBoard = new GameBoard(p1, p2, boardPits, NUM_PLAYERS * numSeeds * numPits);
     }
 
     @Override

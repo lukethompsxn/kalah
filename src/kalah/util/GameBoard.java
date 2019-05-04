@@ -64,7 +64,7 @@ public class GameBoard {
     }
 
     public boolean canContinue() {
-        for (House house : currentPlayer.getHouses().values()) {
+        for (Pit house : currentPlayer.getHouses().values()) {
             if (house.getSeeds() > 0) {
                 return true;
             }

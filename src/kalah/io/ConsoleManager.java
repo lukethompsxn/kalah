@@ -4,10 +4,7 @@ import com.qualitascorpus.testsupport.IO;
 import kalah.action.Action;
 import kalah.action.GameOverAction;
 import kalah.action.PlayerAction;
-import kalah.util.GameBoard;
-import kalah.util.House;
-import kalah.util.Player;
-import kalah.util.RenderDirection;
+import kalah.util.*;
 
 import java.util.Map;
 
@@ -58,10 +55,10 @@ public class ConsoleManager implements IOManger {
             } else {
                 try {
                     Player player = gameBoard.getCurrentPlayer();
-                    House house = player.getHouses().get(Integer.parseInt(response));
+                    Pit house = player.getHouses().get(Integer.parseInt(response));
                     return new PlayerAction(gameBoard, player, house);
                 } catch (NumberFormatException e) {
-                    // do nothing as falls through to return
+                    // do nothing as it will fall through to return
                 }
             }
         }
@@ -95,7 +92,7 @@ public class ConsoleManager implements IOManger {
 
     private String renderPlayerHouses(Player player) {
         StringBuilder output = new StringBuilder();
-        Map<Integer, House> houses = player.getHouses();
+        Map<Integer, Pit> houses = player.getHouses();
 
         if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
             for (Integer index : houses.keySet()) {
