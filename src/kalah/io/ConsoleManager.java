@@ -12,8 +12,10 @@ public class ConsoleManager implements IOManger {
     private static final int MINIMUM_DOUBLE_DIGITS = 10;
     private static final int BASE = 0;
 
-    private static final String BOARD_BORDER = "+----+-------+-------+-------+-------+-------+-------+----+";
-    private static final String BOARD_DIVIDER = "|    |-------+-------+-------+-------+-------+-------|    |";
+    private static final String BOARD_BORDER_SIDES = "+----+";
+    private static final String BOARD_HOUSE = "-------";
+    private static final String BOARD_DIVIDER_SIDES = "|    |";
+    private static final String BOARD_SPECIAL = "+";
     private static final String BOARD_PLAYER = "|%s%s%s|";
     private static final String BOARD_PIT_SINGLE = "| %d[ %d] ";
     private static final String BOARD_PIT_DOUBLE = "| %d[%d] ";
@@ -24,9 +26,13 @@ public class ConsoleManager implements IOManger {
     private static final String BOARD_INPUT = "Player P%d's turn - Specify house number or 'q' to quit: ";
 
     private IO io;
+    private String border;
+    private String divider;
 
     public ConsoleManager(IO io) {
         this.io = io;
+        this.border = renderLine(BOARD_BORDER_SIDES);
+        this.divider = renderLine(BOARD_DIVIDER_SIDES);
     }
 
     @Override
@@ -34,11 +40,11 @@ public class ConsoleManager implements IOManger {
         Player p1 = gameBoard.getP1();
         Player p2 = gameBoard.getP2();
 
-        io.println(BOARD_BORDER);
+        io.println(border);
         io.println(String.format(BOARD_PLAYER, renderPlayerName(p2), renderPlayerHouses(p2), renderPlayerStore(p1)));
-        io.println(BOARD_DIVIDER);
+        io.println(divider);
         io.println(String.format(BOARD_PLAYER, renderPlayerStore(p2), renderPlayerHouses(p1),  renderPlayerName(p1)));
-        io.println(BOARD_BORDER);
+        io.println(border);
     }
 
     @Override
@@ -118,6 +124,18 @@ public class ConsoleManager implements IOManger {
         } else {
             return String.format(BOARD_STORE_DOUBLE, seeds);
         }
+    }
+
+    private String renderLine(String sides) {
+        StringBuilder line = new StringBuilder(sides);
+        for (int i = 0; i < Constants.NUM_PITS; i++) {
+            line.append(BOARD_HOUSE);
+            if (i != Constants.NUM_PITS - 1) {
+                line.append(BOARD_SPECIAL);
+            }
+        }
+        line.append(sides);
+        return line.toString();
     }
 
     private boolean isValid(String response) {
