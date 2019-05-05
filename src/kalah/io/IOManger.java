@@ -4,7 +4,7 @@ import kalah.action.Action;
 import kalah.util.GameBoard;
 
 public interface IOManger {
-    void render(GameBoard gameBoard);
+    void renderBoard(GameBoard gameBoard);
     void renderTermination();
     void renderError(String errorMessage);
     void renderScores(GameBoard gameBoard);

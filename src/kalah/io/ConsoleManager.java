@@ -30,7 +30,7 @@ public class ConsoleManager implements IOManger {
     }
 
     @Override
-    public void render(GameBoard gameBoard) {
+    public void renderBoard(GameBoard gameBoard) {
         Player p1 = gameBoard.getP1();
         Player p2 = gameBoard.getP2();
 
@@ -76,8 +76,8 @@ public class ConsoleManager implements IOManger {
     @Override
     public void renderScores(GameBoard gameBoard) {
         Map<Player, Integer> scores = gameBoard.getFinalScores();
-        io.println(String.format("\tplayer 1:%d", scores.get(gameBoard.getP1())));
-        io.println(String.format("\tplayer 2:%d", scores.get(gameBoard.getP2())));
+        io.println(String.format("\tplayer %d:%d", gameBoard.getP1().getId(), scores.get(gameBoard.getP1())));
+        io.println(String.format("\tplayer %d:%d", gameBoard.getP2().getId(), scores.get(gameBoard.getP2())));
 
         if (scores.get(gameBoard.getP1()) > scores.get(gameBoard.getP2())) {
             io.println(String.format("Player %d wins!", gameBoard.getP1().getId()));
@@ -94,15 +94,11 @@ public class ConsoleManager implements IOManger {
 
         if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
             for (Integer index : houses.keySet()) {
-                int seeds = houses.get(index).getSeeds();
-                String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
-                output.append(String.format(fmt, index, seeds));
+                output.append(getFormattedHouse(houses, index));
             }
         } else {
             for (Integer index : houses.keySet()) {
-                int seeds = houses.get(index).getSeeds();
-                String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
-                output.insert(BASE, String.format(fmt, index, seeds));
+                output.insert(BASE, getFormattedHouse(houses, index));
             }
         }
 
@@ -135,5 +131,11 @@ public class ConsoleManager implements IOManger {
             }
         }
         return true;
+    }
+
+    private String getFormattedHouse(Map<Integer, Pit> houses, Integer index) {
+        int seeds = houses.get(index).getSeeds();
+        String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
+        return String.format(fmt, index, seeds);
     }
 }

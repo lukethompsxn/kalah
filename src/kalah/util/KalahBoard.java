@@ -13,17 +13,15 @@ public class KalahBoard implements GameBoard {
     private boolean isActive;
     private boolean gameCompleted;
     private List<Pit> boardPits;
-    private int totalSeeds;
     private int boardIndex;
 
-    public KalahBoard(Player p1, Player p2, List<Pit> boardPits, int totalSeeds) {
+    public KalahBoard(Player p1, Player p2, List<Pit> boardPits) {
         this.p1 = p1;
         this.p2 = p2;
         this.currentPlayer = p1;
         this.isActive = true;
         this.gameCompleted = false;
         this.boardPits = boardPits;
-        this.totalSeeds = totalSeeds;
     }
 
     @Override
@@ -118,7 +116,7 @@ public class KalahBoard implements GameBoard {
     @Override
     public Map<Player, Integer> getFinalScores() {
         Map<Player, Integer> scores = new HashMap<>();
-        scores.put(getOpponentPlayer(), totalSeeds - currentPlayer.getStore().getSeeds());
+        scores.put(getOpponentPlayer(), getTotalSeeds() - currentPlayer.getStore().getSeeds());
         scores.put(currentPlayer, currentPlayer.getStore().getSeeds());
         return scores;
     }
@@ -175,5 +173,9 @@ public class KalahBoard implements GameBoard {
         oppositePit.clearSeeds();
 
         switchPlayer();
+    }
+
+    private int getTotalSeeds() {
+        return Constants.NUM_PLAYERS * Constants.NUM_PITS * Constants.NUM_SEEDS;
     }
 }
