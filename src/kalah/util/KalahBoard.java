@@ -87,8 +87,7 @@ public class KalahBoard implements GameBoard {
         }
     }
 
-    @Override
-    public void switchPlayer() {
+    private void switchPlayer() {
         if (currentPlayer.equals(p1)) {
             currentPlayer = p2;
         } else {

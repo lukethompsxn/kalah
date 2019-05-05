@@ -12,7 +12,6 @@ public interface GameBoard {
     boolean isActive();
     void terminate();
     void executeMove(int position) throws InvalidActionException;
-    void switchPlayer();
     boolean canContinue();
     boolean isGameCompleted();
     Map<Player, Integer> getFinalScores();
