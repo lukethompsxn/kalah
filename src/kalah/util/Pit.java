@@ -1,16 +1,12 @@
 package kalah.util;
 
 public class Pit {
-    public enum PitType {HOUSE, STORE}
-
     private int id;
     private int seeds;
-    private PitType pitType;
 
-    public Pit(int id, int seeds, PitType pitType) {
+    public Pit(int id, int seeds) {
         this.id = id;
         this.seeds = seeds;
-        this.pitType = pitType;
     }
 
     public int getSeeds() {
@@ -31,10 +27,6 @@ public class Pit {
 
     public void clearSeeds() {
         this.seeds = 0;
-    }
-
-    public PitType getPitType() {
-        return pitType;
     }
 }
 

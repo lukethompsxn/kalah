@@ -57,14 +57,14 @@ public class PitCollection {
         List<Pit> p2Houses = new ArrayList<>();
 
         for (int index = 1; index <= Constants.NUM_PITS; index++) {
-            p1Houses.add(new Pit(index, Constants.NUM_SEEDS, Pit.PitType.HOUSE));
-            p2Houses.add(new Pit(index, Constants.NUM_SEEDS, Pit.PitType.HOUSE));
+            p1Houses.add(new Pit(index, Constants.NUM_SEEDS));
+            p2Houses.add(new Pit(index, Constants.NUM_SEEDS));
         }
 
         boardHouses.put(p1, p1Houses);
         boardHouses.put(p2, p2Houses);
-        boardStores.put(p1, new Pit(STORE_ID, Constants.NUM_STORE_SEEDS, Pit.PitType.STORE));
-        boardStores.put(p2, new Pit(STORE_ID, Constants.NUM_STORE_SEEDS, Pit.PitType.STORE));
+        boardStores.put(p1, new Pit(STORE_ID, Constants.NUM_STORE_SEEDS));
+        boardStores.put(p2, new Pit(STORE_ID, Constants.NUM_STORE_SEEDS));
     }
 
     private Iterator<Pit> resetBoardIterator() {
