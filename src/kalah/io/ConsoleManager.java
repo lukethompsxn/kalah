@@ -6,6 +6,7 @@ import kalah.action.GameOverAction;
 import kalah.action.PlayerAction;
 import kalah.util.*;
 
+import java.util.Iterator;
 import java.util.Map;
 
 public class ConsoleManager implements IOManger {
@@ -39,11 +40,12 @@ public class ConsoleManager implements IOManger {
     public void renderBoard(GameBoard gameBoard) {
         Player p1 = gameBoard.getP1();
         Player p2 = gameBoard.getP2();
+        PitCollection pits = gameBoard.getPits();
 
         io.println(border);
-        io.println(String.format(BOARD_PLAYER, renderPlayerName(p2), renderPlayerHouses(p2), renderPlayerStore(p1)));
+        io.println(String.format(BOARD_PLAYER, renderPlayerName(p2), renderPlayerHouses(pits, p2), renderPlayerStore(pits, p1)));
         io.println(divider);
-        io.println(String.format(BOARD_PLAYER, renderPlayerStore(p2), renderPlayerHouses(p1),  renderPlayerName(p1)));
+        io.println(String.format(BOARD_PLAYER, renderPlayerStore(pits, p2), renderPlayerHouses(pits, p1), renderPlayerName(p1)));
         io.println(border);
     }
 
@@ -92,19 +94,22 @@ public class ConsoleManager implements IOManger {
         } else {
             io.println("A tie!");
         }
-     }
+    }
 
-    private String renderPlayerHouses(Player player) {
+    private String renderPlayerHouses(PitCollection pits, Player player) {
         StringBuilder output = new StringBuilder();
-        Map<Integer, Pit> houses = player.getHouses();
+        Iterator<Pit> playerHouses = pits.getPlayerHouses(player);
 
+        int index = 1;
         if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
-            for (Integer index : houses.keySet()) {
-                output.append(getFormattedHouse(houses, index));
+            while (playerHouses.hasNext()) {
+                output.append(getFormattedHouse(playerHouses.next(), index));
+                index++;
             }
         } else {
-            for (Integer index : houses.keySet()) {
-                output.insert(BASE, getFormattedHouse(houses, index));
+            while (playerHouses.hasNext()) {
+                output.insert(BASE, getFormattedHouse(playerHouses.next(), index));
+                index++;
             }
         }
 
@@ -116,8 +121,8 @@ public class ConsoleManager implements IOManger {
         return String.format(BOARD_NAME, player.getId());
     }
 
-    private String renderPlayerStore(Player player) {
-        int seeds = player.getStore().getSeeds();
+    private String renderPlayerStore(PitCollection pits, Player player) {
+        int seeds = pits.getPlayerStore(player).getSeeds();
 
         if (seeds < MINIMUM_DOUBLE_DIGITS) {
             return String.format(BOARD_STORE_SINGLE, seeds);
@@ -139,6 +144,10 @@ public class ConsoleManager implements IOManger {
     }
 
     private boolean isValid(String response) {
+        if (response == null || response.isEmpty()) {
+            return false;
+        }
+
         if (response.equals("q") || response.equals("Q")) {
             return true;
         } else {
@@ -151,8 +160,8 @@ public class ConsoleManager implements IOManger {
         return true;
     }
 
-    private String getFormattedHouse(Map<Integer, Pit> houses, Integer index) {
-        int seeds = houses.get(index).getSeeds();
+    private String getFormattedHouse(Pit house, Integer index) {
+        int seeds = house.getSeeds();
         String fmt = seeds < MINIMUM_DOUBLE_DIGITS ? BOARD_PIT_SINGLE : BOARD_PIT_DOUBLE;
         return String.format(fmt, index, seeds);
     }

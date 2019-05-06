@@ -12,12 +12,13 @@ import kalah.engine.KalahEngine;
  */
 public class Kalah {
 
-	public static void main(String[] args) {
-		new Kalah().play(new MockIO());
-	}
-	public void play(IO io) {
-		GameEngine engine = new KalahEngine(new ConsoleManager(io));
-		engine.initialise();
-		engine.play();
-	}
+    public static void main(String[] args) {
+        new Kalah().play(new MockIO());
+    }
+
+    public void play(IO io) {
+        GameEngine engine = new KalahEngine(new ConsoleManager(io));
+        engine.initialise();
+        engine.play();
+    }
 }
