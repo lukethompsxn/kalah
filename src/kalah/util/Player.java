@@ -2,18 +2,18 @@ package kalah.util;
 
 public class Player {
     private int id;
-    private RenderDirection renderDirection;
+    private Direction direction;
 
-    public Player(int id, RenderDirection renderDirection) {
+    public Player(int id, Direction direction) {
         this.id = id;
-        this.renderDirection = renderDirection;
+        this.direction = direction;
     }
 
     public int getId() {
         return id;
     }
 
-    public RenderDirection getRenderDirection() {
-        return renderDirection;
+    public Direction getDirection() {
+        return direction;
     }
 }

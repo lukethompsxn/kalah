@@ -4,7 +4,7 @@ import kalah.exception.InvalidActionException;
 import kalah.io.IOManger;
 import kalah.util.*;
 
-public class KalahEngine implements GameEngine {
+public class KalahEngine {
     private static final int PLAYER1 = 1;
     private static final int PLAYER2 = 2;
 
@@ -13,19 +13,9 @@ public class KalahEngine implements GameEngine {
 
     public KalahEngine(IOManger ioManager) {
         this.ioManager = ioManager;
+        initialise();
     }
 
-    @Override
-    public void initialise() {
-        // Initialise Players
-        Player p1 = new Player(PLAYER1, RenderDirection.FORWARDS);
-        Player p2 = new Player(PLAYER2, RenderDirection.BACKWARDS);
-
-        // Initialise Board
-        gameBoard = new KalahBoard(p1, p2, new PitCollection(p1, p2));
-    }
-
-    @Override
     public void play() {
         while (gameBoard.isActive()) {
             ioManager.renderBoard(gameBoard);
@@ -41,5 +31,14 @@ public class KalahEngine implements GameEngine {
         if (gameBoard.isGameCompleted()) {
             ioManager.renderScores(gameBoard);
         }
+    }
+
+    private void initialise() {
+        // Initialise Players
+        Player p1 = new Player(PLAYER1, Direction.RIGHT);
+        Player p2 = new Player(PLAYER2, Direction.LEFT);
+
+        // Initialise Board
+        gameBoard = new KalahBoard(p1, p2, new PitCollection(p1, p2));
     }
 }

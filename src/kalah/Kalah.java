@@ -2,7 +2,6 @@ package kalah;
 
 import com.qualitascorpus.testsupport.IO;
 import com.qualitascorpus.testsupport.MockIO;
-import kalah.engine.GameEngine;
 import kalah.io.ConsoleManager;
 import kalah.engine.KalahEngine;
 
@@ -17,8 +16,7 @@ public class Kalah {
     }
 
     public void play(IO io) {
-        GameEngine engine = new KalahEngine(new ConsoleManager(io));
-        engine.initialise();
+        KalahEngine engine = new KalahEngine(new ConsoleManager(io));
         engine.play();
     }
 }

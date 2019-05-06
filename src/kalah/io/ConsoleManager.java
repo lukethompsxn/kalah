@@ -101,7 +101,7 @@ public class ConsoleManager implements IOManger {
         Iterator<Pit> playerHouses = pits.getPlayerHouses(player);
 
         int index = 1;
-        if (player.getRenderDirection().equals(RenderDirection.FORWARDS)) {
+        if (player.getDirection().equals(Direction.RIGHT)) {
             while (playerHouses.hasNext()) {
                 output.append(getFormattedHouse(playerHouses.next(), index));
                 index++;
