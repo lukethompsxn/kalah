@@ -2,8 +2,8 @@ package kalah;
 
 import com.qualitascorpus.testsupport.IO;
 import com.qualitascorpus.testsupport.MockIO;
-import kalah.io.ConsoleManager;
 import kalah.engine.KalahEngine;
+import kalah.io.ConsoleManager;
 
 /**
  * This class is the starting point for a Kalah implementation using
