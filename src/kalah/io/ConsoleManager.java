@@ -1,13 +1,11 @@
 package kalah.io;
 
 import com.qualitascorpus.testsupport.IO;
-import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
 import kalah.action.Action;
 import kalah.action.GameOverAction;
 import kalah.action.PlayerAction;
 import kalah.util.*;
 
-import java.util.Iterator;
 import java.util.Map;
 
 public class ConsoleManager implements IOManger {
@@ -20,7 +18,7 @@ public class ConsoleManager implements IOManger {
     private static final String BOARD_ROW = "|%s|%s|";
     private static final String BOARD_PLAYER_SPACE = "       ";
     private static final String BOARD_STORE_SINGLE = " P%d  %d ";
-    private static final String BOARD_STORE_DOUBLE = " P%d  %d";
+    private static final String BOARD_STORE_DOUBLE = " P%d %d ";
     private static final String BOARD_INPUT = "Player P%d's turn - Specify house number or 'q' to quit: ";
 
     private IO io;
