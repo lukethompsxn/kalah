@@ -1,6 +1,7 @@
 package kalah.io;
 
 import com.qualitascorpus.testsupport.IO;
+import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
 import kalah.action.Action;
 import kalah.action.GameOverAction;
 import kalah.action.PlayerAction;
@@ -11,29 +12,21 @@ import java.util.Map;
 
 public class ConsoleManager implements IOManger {
     private static final int MINIMUM_DOUBLE_DIGITS = 10;
-    private static final int BASE = 0;
 
-    private static final String BOARD_BORDER_SIDES = "+----+";
-    private static final String BOARD_HOUSE = "-------";
-    private static final String BOARD_DIVIDER_SIDES = "|    |";
-    private static final String BOARD_SPECIAL = "+";
-    private static final String BOARD_PLAYER = "|%s%s%s|";
-    private static final String BOARD_PIT_SINGLE = "| %d[ %d] ";
-    private static final String BOARD_PIT_DOUBLE = "| %d[%d] ";
-    private static final String BOARD_NAME = " P%s ";
-    private static final String BOARD_STORE_SINGLE = "  %d ";
-    private static final String BOARD_STORE_DOUBLE = " %d ";
-    private static final String BOARD_VERTICAL_DIVIDER = "|";
+    private static final String BOARD_BORDER = "+---------------+";
+    private static final String BOARD_DIVIDER = "+-------+-------+";
+    private static final String BOARD_PIT_SINGLE = " %d[ %d] ";
+    private static final String BOARD_PIT_DOUBLE = " %d[%d] ";
+    private static final String BOARD_ROW = "|%s|%s|";
+    private static final String BOARD_PLAYER_SPACE = "       ";
+    private static final String BOARD_STORE_SINGLE = " P%d  %d ";
+    private static final String BOARD_STORE_DOUBLE = " P%d  %d";
     private static final String BOARD_INPUT = "Player P%d's turn - Specify house number or 'q' to quit: ";
 
     private IO io;
-    private String border;
-    private String divider;
 
     public ConsoleManager(IO io) {
         this.io = io;
-        this.border = renderLine(BOARD_BORDER_SIDES);
-        this.divider = renderLine(BOARD_DIVIDER_SIDES);
     }
 
     @Override
@@ -42,11 +35,13 @@ public class ConsoleManager implements IOManger {
         Player p2 = gameBoard.getP2();
         PitCollection pits = gameBoard.getPits();
 
-        io.println(border);
-        io.println(String.format(BOARD_PLAYER, renderPlayerName(p2), renderPlayerHouses(pits, p2), renderPlayerStore(pits, p1)));
-        io.println(divider);
-        io.println(String.format(BOARD_PLAYER, renderPlayerStore(pits, p2), renderPlayerHouses(pits, p1), renderPlayerName(p1)));
-        io.println(border);
+        io.println(BOARD_BORDER);
+        io.println(renderPlayer(pits, p2));
+        io.println(BOARD_DIVIDER);
+        renderHouses(pits, p1, p2);
+        io.println(BOARD_DIVIDER);
+        io.println(renderPlayer(pits, p1));
+        io.println(BOARD_BORDER);
     }
 
     @Override
@@ -96,51 +91,40 @@ public class ConsoleManager implements IOManger {
         }
     }
 
-    private String renderPlayerHouses(PitCollection pits, Player player) {
-        StringBuilder output = new StringBuilder();
-        Iterator<Pit> playerHouses = pits.getPlayerHouses(player);
-
+    private void renderHouses(PitCollection pits, Player p1, Player p2) {
         int index = 1;
-        if (player.getDirection().equals(Direction.RIGHT)) {
-            while (playerHouses.hasNext()) {
-                output.append(getFormattedHouse(playerHouses.next(), index));
-                index++;
-            }
-        } else {
-            while (playerHouses.hasNext()) {
-                output.insert(BASE, getFormattedHouse(playerHouses.next(), index));
-                index++;
-            }
+        while (index <= Constants.NUM_PITS) {
+            int p2PitNum = Constants.NUM_PITS - index + 1;
+            String left = getFormattedHouse(pits.getPlayerHouse(p1, index), index);
+            String right = getFormattedHouse(pits.getPlayerHouse(p2, p2PitNum),p2PitNum);
+            io.println(String.format(BOARD_ROW, left, right));
+            index++;
         }
-
-        output.append(BOARD_VERTICAL_DIVIDER);
-        return output.toString();
     }
 
-    private String renderPlayerName(Player player) {
-        return String.format(BOARD_NAME, player.getId());
+    private String renderPlayer(PitCollection pits, Player player) {
+        String left;
+        String right;
+
+        if (player.getDirection().equals(Direction.RIGHT)) {
+            left = renderPlayerStore(pits, player);
+            right = BOARD_PLAYER_SPACE;
+        } else {
+            left = BOARD_PLAYER_SPACE;
+            right = renderPlayerStore(pits, player);
+        }
+
+        return String.format(BOARD_ROW, left, right);
     }
 
     private String renderPlayerStore(PitCollection pits, Player player) {
         int seeds = pits.getPlayerStore(player).getSeeds();
 
         if (seeds < MINIMUM_DOUBLE_DIGITS) {
-            return String.format(BOARD_STORE_SINGLE, seeds);
+            return String.format(BOARD_STORE_SINGLE, player.getId(), seeds);
         } else {
-            return String.format(BOARD_STORE_DOUBLE, seeds);
+            return String.format(BOARD_STORE_DOUBLE, player.getId(), seeds);
         }
-    }
-
-    private String renderLine(String sides) {
-        StringBuilder line = new StringBuilder(sides);
-        for (int i = 0; i < Constants.NUM_PITS; i++) {
-            line.append(BOARD_HOUSE);
-            if (i != Constants.NUM_PITS - 1) {
-                line.append(BOARD_SPECIAL);
-            }
-        }
-        line.append(sides);
-        return line.toString();
     }
 
     private boolean isValid(String response) {
