@@ -4,6 +4,7 @@ import com.qualitascorpus.testsupport.IO;
 import com.qualitascorpus.testsupport.MockIO;
 import kalah.engine.KalahEngine;
 import kalah.io.ConsoleManager;
+import kalah.io.board.HorizontalBoardRenderer;
 
 /**
  * This class is the starting point for a Kalah implementation using
@@ -16,7 +17,7 @@ public class Kalah {
     }
 
     public void play(IO io) {
-        KalahEngine engine = new KalahEngine(new ConsoleManager(io));
+        KalahEngine engine = new KalahEngine(new ConsoleManager(io, new HorizontalBoardRenderer(io)));
         engine.play();
     }
 }
