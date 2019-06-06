@@ -5,7 +5,7 @@ import kalah.util.*;
 
 import java.util.Iterator;
 
-public class HorizontalBoardRenderer implements BoardRenderer {
+public class StandardBoardRenderer implements BoardRenderer {
     private static final int MINIMUM_DOUBLE_DIGITS = 10;
     private static final int BASE = 0;
 
@@ -25,7 +25,7 @@ public class HorizontalBoardRenderer implements BoardRenderer {
     private String border;
     private String divider;
 
-    public HorizontalBoardRenderer(IO io) {
+    public StandardBoardRenderer(IO io) {
         this.io = io;
         this.border = renderLine(BOARD_BORDER_SIDES);
         this.divider = renderLine(BOARD_DIVIDER_SIDES);
